@@ -1,6 +1,11 @@
 import datetime
+from importlib.metadata import requires
+from keras.models import load_model
+import numpy as np
 import yfinance as yf
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from programs.candle_plot import candle_plot
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
@@ -10,28 +15,60 @@ app.static_folder = 'static'
 def index():
     return render_template('index.html')
 
-@app.route('/home')
-def home():
+@app.route('/result', methods = ['POST', 'GET'])
+def result():
     if request.method == 'POST':
-        coin = str(request.form.get('coin'))
+        if request.form.get('result') == "plot":
 
-        today = datetime.date.today()
-        d1 = today.strftime("%Y-%m-%d")
-        d2 = datetime.date.today() - datetime.timedelta(days = 9)
-        d2 = d2.strftime("%Y-%m-%d")
+            coin = str(request.form.get('coin'))
 
-        data = yf.download(coin, start = d2, end = d1, progress = False)
-        data = data[['Close']]
+            today = datetime.date.today()
+            d1 = today.strftime("%Y-%m-%d")
+            d2 = datetime.date.today() - datetime.timedelta(days = 9)
+            d2 = d2.strftime("%Y-%m-%d")
+            data = yf.download(coin, start = d2, end = d1, progress = False)
 
-        plt.plot(data['Close'])
-        plt.xlabel("Date")
-        plt.ylabel("Close")
+            candle_plot(data)
 
-        title = f'Last 10 days price of {coin}'
-        plt.title(title)
+            return render_template('index.html', coin = coin)
+        elif request.form.get('result') == 'predict':
 
-        plt.savefig('./static/plot.png')
+            coin = str(request.form.get('coin'))
+            coinDict = {
+                'BTC-USD' : 'bitcoin',
+                'DOGE-USD' : 'dogecoin',
+                'ETH-USD' : 'ethereum',
+                'MIOTA-USD' : 'iota',
+                'TRX-USD' : 'tron'
+            }
+            MODEL_PATH = f'./models/{coinDict[coin]}.h5'
+            model = load_model(MODEL_PATH)
 
-        return render_template('index.html', coin = coin)
+            today = datetime.date.today()
+            d1 = today.strftime("%Y-%m-%d")
+            d2 = datetime.date.today() - datetime.timedelta(days = 9)
+            d2 = d2.strftime("%Y-%m-%d")
+
+            new_sample = yf.download(coin, start = d2, end = d1, progress = False)
+
+            last9 = new_sample[['Close']]
+            vals = last9.values
+
+            temp = []
+
+            for i in range(len(vals)):
+                temp.append(vals[0][0])
+
+            scaler = MinMaxScaler()
+            sample = scaler.fit_transform(np.array(temp).reshape(-1, 1))
+            sample = np.asarray(sample)[1:]
+
+            sample = np.reshape(sample, (1, 1, 9))
+
+            prediction = model.predict(sample, batch_size = 2)
+
+            prediction = scaler.inverse_transform(prediction)
+            return render_template('predict.html', prediction=prediction)
 
 app.run(debug=True)
+

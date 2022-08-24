@@ -3,27 +3,24 @@
         <title>
             Crypto-Price Prediction
         </title>
-        <!-- <link href = "{{ url_for('static', filename = 'styles.css' )}}" rel = "stylesheet"> -->
     </head>
 
     <body>
         
-        <form action="/home" method="POST">
-            <select id = 'coin'>
-                <option name="None" selected="selected">Select a Coin</option>
-                <option name="BTC-USD">Bitcoin</option>
+        <form action="/result" method="POST">
+            <select name = 'coin'>
+                <option value="None" selected="selected">Select a Coin</option>
+                <option value="BTC-USD">Bitcoin</option>
                 <option value="DOGE-USD">Dogecoin</option>
                 <option value="ETH-USD">Ethereum</option>
                 <option value="MIOTA-USD">IOTA</option>
                 <option value="TRX-USD">TRON</option>
             </select>
 
-            <a href="/home">
-                <button type="submit" >Submit</button>
-            </a>
+            <button name = 'result' value = "plot" type="submit">Plot</button>
+            <button name = "result" value = "predict" type = "submit">Predict</button>
+
         </form>
-        {{coin}}
-        <img src="../static/plot.png" alt="Select a coin!">
 
     </body>
 </html>
