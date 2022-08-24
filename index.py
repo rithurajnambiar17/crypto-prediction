@@ -1,9 +1,9 @@
 import datetime
-from keras.models import load_model
 import numpy as np
 import yfinance as yf
-from sklearn.preprocessing import MinMaxScaler
+from keras.models import load_model
 from programs.candle_plot import candle_plot
+from sklearn.preprocessing import MinMaxScaler
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
