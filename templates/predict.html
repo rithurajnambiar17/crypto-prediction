@@ -23,12 +23,22 @@
                             </select><br>
 
                             <div class="buttons-group">
-                                <button name = 'result' value = "day" type="submit" class="btn btn-outline-dark" onclick="alert('The prediction of ' + '{{coin}}' + ' for next day is '+ '{{prediction}}' + ' USD')">Day</button>
+                                <!-- <button name = 'result' value = "day" type="submit" class="btn btn-outline-dark" onclick="alert('The prediction of ' + '{{coin}}' + ' for next day is '+ '{{prediction}}' + ' USD')">Day</button>
                                 <button name = "result" value = "week" type = "submit" class="btn btn-outline-dark" onclick="alert('The prediction of ' + '{{coin}}' + ' for next week is '+ '{{prediction}}' + ' USD')">Week</button>    
-                                <button name = "result" value = "fortnight" type = "submit" class="btn btn-outline-dark" onclick="alert('The prediction of ' + '{{coin}}' + ' for next fortnight is '+ '{{prediction}}' + ' USD')">Fortnight</button>                            
+                                <button name = "result" value = "fortnight" type = "submit" class="btn btn-outline-dark" onclick="alert('The prediction of ' + '{{coin}}' + ' for next fortnight is '+ '{{prediction}}' + ' USD')">Fortnight</button>                             -->
+                                <script>
+                                    function display() {                                    
+                                        document.getElementById("demo").innerHTML = "The prediction of '{{coin}}' for next day is '{{prediction}}'  USD";
+                                    }
+                                </script>
+                                <button name="result" value="day" class="btn btn-outline-dark" onclick=display()>Day</button>
+                                <button name="result" value="week" class="btn btn-outline-dark" onclick=display()>Week</button>
+                                <button name="result" value="fortnight" class="btn btn-outline-dark" onclick=display()>Fortnight</button>
                             </div>
+
                         </form>
                         
+                        <p id = "demo"></p>
                 </div>
             </div>
         </div>
