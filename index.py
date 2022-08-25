@@ -57,7 +57,7 @@ def predict():
                 for i in range(len(vals)):
                     temp.append(vals[0][0])
 
-                prediction = scalePredict(temp, model)
+                prediction = scalePredict(temp, model)[0][0]
                 return render_template('predict.html', coin = coin, prediction = prediction)
 
             elif request.form.get('result') == 'week':
@@ -83,7 +83,7 @@ def predict():
                     temp = temp[1:]
                     temp.append(pred)
 
-                prediction = scalePredict(temp, model)
+                prediction = scalePredict(temp, model)[0][0]
                 return render_template('predict.html', coin = coin, prediction = prediction)
 
             elif request.form.get('result') == 'fortnight':
@@ -111,7 +111,7 @@ def predict():
                     temp = temp[1:]
                     temp.append(pred)
                 
-                prediction = scalePredict(temp, model)
+                prediction = scalePredict(temp, model)[0][0]
                 return render_template('predict.html', coin = coin, prediction = prediction)
 
     return render_template('predict.html')
